@@ -45,7 +45,7 @@ def create(args):
                 result = str(e)
             info = f"{count} record"
             info += "s created" if count > 1 else " created"
-            info += f"with message:{result}" if result else ""
+            info += f" with message:{result}" if result else ""
             return info
         return "None data specified."
     return result
@@ -70,20 +70,20 @@ def update(args):
     if query is not None:
         table, result = __get_model_or_table(args.model[0])
         values = __parse_args_for_model(args.values, table, False)
-        count, result = __execute(query, Query.update, values[0])
+        count, result = __execute(query, Query.update, values[0], False)
         info = f"{count} record"
         info += "s updated" if count > 1 else " updated"
-        info += f"with message:{result}" if result else ""
+        info += f" with message:{result}" if result else ""
         return info
     return result
 
 def delete(args):
     query, result = __get_query(args)
     if query is not None:
-        count, result = __execute(query, Query.delete)
+        count, result = __execute(query, Query.delete, False)
         info = f"{count} record"
         info += "s deleted" if count > 1 else " deleted"
-        info += f"with message:{result}" if result else ""
+        info += f" with message:{result}" if result else ""
         return info
     return result
 
@@ -119,13 +119,26 @@ def __extend_mappings(values, value, enclose = True):
             values[key] = value
 
 def __parse_args_for_model(datas, table, enclose = True):
+    columns = table.__table__.columns if hasattr(table,"__table__") else table.columns
+    return __parse_args(datas, columns, enclose)
+
+def __parse_args(datas, columns, enclose = True):
     if datas is None:
         return []
-    columns = table.__table__.columns if hasattr(table,"__table__") else table.columns
+    
     icolumn = 0
-    icolumns = [c for c in columns if type(c.type) == sqlalchemy.sql.sqltypes.Integer]
     scolumn = 0
-    scolumns = [c for c in columns if type(c.type) == sqlalchemy.sql.sqltypes.String]
+    if columns:
+        icolumns = [c for c in columns if type(c.type) == sqlalchemy.sql.sqltypes.Integer]
+        scolumns = [c for c in columns if type(c.type) == sqlalchemy.sql.sqltypes.String]
+    else:
+        class Column():
+            def __init__(self, key):
+                self.key = key
+        
+        icolumns = [Column("id")]
+        scolumns = [Column("name")]
+
 
     filters = []
     for value in datas:
