@@ -19,7 +19,7 @@ def main():
     connection.connect(args)
     try:
         open(".lock","r")
-    except Exception as e:
+    except FileNotFoundError as e:
         # Switched to use alembic
         # model.Base.metadata.drop_all(connection.session().bind)
         # connection.session().commit()
