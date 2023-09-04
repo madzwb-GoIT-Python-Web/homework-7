@@ -24,7 +24,7 @@ class Student(Base):
     group_id    = Column("group_id"   , Integer     , ForeignKey('groups.id'    , onupdate="CASCADE"    , ondelete="CASCADE")   , nullable=False)
     first_name  = Column("first_name" , String(128) , nullable=False)
     last_name   = Column("last_name"  , String(128) , nullable=False)
-    # middle_name = Column("middle_name", String(128) , nullable=True)
+    middle_name = Column("middle_name", String(128) , nullable=True)
 
     __table_args__ = (UniqueConstraint("first_name", "last_name", name = "uc_students") ,)
 
@@ -38,7 +38,7 @@ class Teacher(Base):
     id          = Column("id"         , Integer     , primary_key = True, autoincrement = True)
     first_name  = Column("first_name" , String(128) , nullable=False)
     last_name   = Column("last_name"  , String(128) , nullable=False)
-    # middle_name = Column("middle_name", String(128) , nullable=True)
+    middle_name = Column("middle_name", String(128) , nullable=True)
 
     __table_args__ = (UniqueConstraint("first_name", "last_name", name = "uc_teachers") ,)
 
