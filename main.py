@@ -2,11 +2,15 @@
 
 import argparser as ap
 import connection
+# import keyboard
+# import msvcrt
 # import models
 # import queries
 import seed
 # import tabulate
 # import my_select
+
+# keyboard.add_hotkey('up, down', lambda: keyboard.write('foobar'))
 
 def main():
     ap.create_parser()
@@ -23,6 +27,9 @@ def main():
         seed.seed(connection.session())
         open(".lock","w")
     while True:
+        # char = msvcrt.getche()
+        # msvcrt.putch(char)
+        # continue
         command = input(">")
         commands = ap.parse_command(command)
         parsed_commands = ap.parse_commands(commands)
